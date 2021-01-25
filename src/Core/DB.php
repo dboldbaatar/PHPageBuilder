@@ -25,12 +25,21 @@ class DB
      */
     public function __construct(array $config)
     {
-        $this->pdo = new PDO(
-            $config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['database'] . ";options='--client_encoding=" . $config['charset'] . "'",
-            $config['username'],
-            $config['password'],
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-        );
+        if($config['driver'] == 'pgsql'){
+            $this->pdo = new PDO(
+                $config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['database'],
+                $config['username'],
+                $config['password'],
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            );
+        }else{
+            $this->pdo = new PDO(
+                $config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['database'] . ';charset=' . $config['charset'],
+                $config['username'],
+                $config['password'],
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            );
+        }
     }
 
     /**
