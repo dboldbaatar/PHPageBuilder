@@ -237,7 +237,21 @@ class BlockRenderer
         unset($controller, $model, $blockData);
 
         ob_start();
-        require $themeBlock->getViewFile();
+
+        if( (bool) substr_count($themeBlock->getViewFile(), '/view.png') ){
+            $path = $themeBlock->getViewFile();
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+            echo '<div class="thumbnail">';
+                echo '<img src="'.$base64.'" style="width:100%; max-width: 100%;">';
+            echo '</div>';
+            
+        }else{
+            require $themeBlock->getViewFile();
+        }
+        
         $html = ob_get_contents();
         ob_end_clean();
 

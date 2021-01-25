@@ -35,10 +35,30 @@ class ThemeBlock
         $this->theme = $theme;
         $this->blockSlug = $blockSlug;
 
-        $this->config = [];
+        $this->config = [
+            'settings' => [
+                'ddtd' => [
+                    "type" => "text",
+                    "label" => "ДДТДугаар",
+                    "placeholder" => "Дахин давтагдашгүй тусгай дугаар",
+                    "value" => ""
+                ]
+            ]
+        ];
         if (file_exists($this->getFolder() . '/config.php')) {
-            $this->config = require $this->getFolder() . '/config.php';
+
+            $config = require $this->getFolder() . '/config.php';
+
+            if(isset($config['settings'])){
+                $config['settings']['ddtd'] = $this->config['settings']['ddtd'];
+            }else{
+                $config['settings'] = $this->config['settings'];
+            }
+
+            $this->config = $config;
+
         }
+
 
         PageRenderer::setCanBeCached(
             boolval($this->config['cache'] ?? true),
@@ -136,6 +156,21 @@ class ThemeBlock
         return null;
     }
 
+    public function substr_count_array($haystack, $needle) {
+        $count = 0;
+        $haystack = strtolower($haystack);
+        foreach ($needle as $substring) {
+            $count += substr_count($haystack, strtolower($substring));
+        }
+        return $count;
+    }
+
+    public function getEditable(){
+
+        return  (bool) $this->substr_count_array( $_SERVER['REQUEST_URI'], ['admin','backend']) ;
+
+    }
+
     /**
      * Return the view file of this theme block.
      *
@@ -143,9 +178,15 @@ class ThemeBlock
      */
     public function getViewFile()
     {
-        if ($this->isPhpBlock()) {
+
+        if( $this->getEditable() && file_exists($this->getFolder().'/view.png') ){
+            return $this->getFolder().'/view.png';
+        }
+        
+        elseif ($this->isPhpBlock()) {
             return $this->getFolder() . '/view.php';
         }
+
         return $this->getFolder() . '/view.html';
     }
 
