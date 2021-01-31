@@ -511,7 +511,7 @@ $(document).on("input", "#block-search input", function () {
             if (component.attributes['style-identifier'] !== undefined && component.attributes['style-identifier'] !== '') {
                 component.removeClass(component.attributes['style-identifier']);
                 delete component.attributes['style-identifier'];
-                addUniqueClass(component);
+                // addUniqueClass(component);
             }
             component.attributes['block-id'] = component.attributes['block-slug'];
 
@@ -909,7 +909,7 @@ $(document).on("input", "#block-search input", function () {
                     stylable: true
                 };
                 // for styling this particular block, the block needs to have a unique class
-                addUniqueClass(component);
+                // addUniqueClass(component);
             }
             if (component.attributes['is-html'] === 'true') {
                 // the block we just entered is an html block,
@@ -1008,7 +1008,7 @@ $(document).on("input", "#block-search input", function () {
         if (!$.isEmptyObject(settings)) {
             component.set(settings);
             if (settings.stylable !== undefined && settings.stylable) {
-                addUniqueClass(component);
+                // addUniqueClass(component);
             }
         }
     }
